@@ -1,37 +1,26 @@
-import { useRecoilState } from 'recoil';
-import { cookieState } from './recoil/state';
-
-// const Data = [
-//   {
-//     id: '2',
-//     title: 'title2',
-//     contents: 'contents2',
-//   },
-//   {
-//     id: '3',
-//     title: 'title3',
-//     contents: 'contents3',
-//   },
-// ];
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { cookieState, cookieStateSelector, IMovie, moviePageState } from './recoil/state';
 
 const Cookie = () => {
-  const [cookies, setCookies] = useRecoilState<number>(cookieState);
+  const [cookies, setCookies] = useRecoilState<IMovie[] | []>(cookieState);
+  const [page, setPage] = useRecoilState<number>(moviePageState);
 
+  const cookie = useRecoilValue(cookieStateSelector);
   const onChange = () => {
-    setCookies(cookies + 1);
+    setPage(page + 1);
+    setCookies(cookie.Search);
   };
 
-  // console.log(cookies.count + 1);
   return (
     <div>
-      {/* {Data.map((item) => {
-        return <button onClick={() => onChange(item)}>{item.title}</button>;
-      })} */}
-
-      <span>{cookies}</span>
+      {cookies.map((movie) => {
+        return <span key={movie.imdbID}>{movie.Title}</span>;
+      })}
       <button type="button" onClick={onChange}>
-        증가
+        영화 타이틀보기
       </button>
+
+      <span>{page}</span>
     </div>
   );
 };
